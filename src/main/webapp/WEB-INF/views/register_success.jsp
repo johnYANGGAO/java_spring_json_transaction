@@ -22,6 +22,10 @@
 			<td>${user.gender}</td>
 		</tr>
 		<tr>
+			<td>GratuDate :</td>
+			<td>${user.gratuDate}</td>
+		</tr>
+		<tr>
 			<td>Phone :</td>
 			<td>${user.mobilePhone}</td>
 		</tr>

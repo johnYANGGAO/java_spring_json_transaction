@@ -1,18 +1,36 @@
-
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
 <html>
 <body>
+	<link rel="stylesheet" href="<spring:theme code='styleSheet'/>"
+		type="text/css" />
+	<p>
+		<a href="/springrestexample/register.html?siteTheme=green">Green</a> |
+		<a href="/springrestexample/register.html?siteTheme=red">Red</a>
+
+	</p>
+
+	<a href="/springrestexample/register.html?sitelanguage=en">English</a> |
+	<a href="/springrestexample/register.html?sitelanguage=zh">Chinese</a> |
+	<a href="/springrestexample/register.html?sitelanguage=fr">French</a>
+
 	<h1>${headmsg}</h1>
 	<h3>this is the register page</h3>
-	
+
 	<form:errors path="user.*" />
 	<form action="/springrestexample/registerdown.html" method="post">
 		<table>
 			<tr>
-				<td>Name :</td>
+				<!-- <td>Name :</td> -->
+				<td><spring:message code="lable.name"></spring:message></td>
 				<td><input type="text" name="name" /></td>
 			</tr>
-
+			<tr>
+				<td>GratuDate :</td>
+				<td><input type="date" name="gratuDate" /></td>
+			</tr>
 			<tr>
 				<td>Age :</td>
 				<td><input type="text" name="age" /></td>

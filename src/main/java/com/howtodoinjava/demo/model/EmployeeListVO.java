@@ -3,8 +3,10 @@ package com.howtodoinjava.demo.model;
 import java.util.ArrayList;
 import java.util.List;
  
+
 import javax.xml.bind.annotation.XmlRootElement;
  
+@SuppressWarnings("restriction")
 @XmlRootElement (name="employees")
 public class EmployeeListVO
 {

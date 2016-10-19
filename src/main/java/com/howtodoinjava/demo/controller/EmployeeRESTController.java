@@ -1,13 +1,18 @@
 package com.howtodoinjava.demo.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +27,26 @@ import com.howtodoinjava.demo.model.EmployeeVO;
 
 @RestController
 public class EmployeeRESTController {
+	// in success page , the field gender will be disallowed show
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+
+		binder.setDisallowedFields(new String[] { "gender" });
+		// we can do another things like code below
+		/**
+		 * BUT : cannot convert value of type java.lang.string to required type
+		 * java.sql.date WHEN input yyyy-MM-dd reason : missing of
+		 * configuration; date ->format processing->string ?->need date
+		 * */
+		// SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+		// binder.registerCustomEditor(Date.class, "gratuDate",
+		// new CustomDateEditor(format, true));
+		/**
+		 * if you want make validate does work , codes below should be commented
+		 * */
+		// binder.registerCustomEditor(String.class, "name",
+		// new UserPropertyNameEditor());
+	}
 
 	@RequestMapping(value = "/employees")
 	public @ResponseBody
@@ -62,16 +87,9 @@ public class EmployeeRESTController {
 
 	@RequestMapping(value = "/feedback", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> testPostJson(@RequestBody Object orders,
-			BindingResult bindingResult) {
+	public Map<String, Object> testPostJson(@RequestBody Object orders) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		// these codes below will be used if bean be used ;
-		// if (bindingResult.hasErrors()) {
-		// map.put("errorCode", "40001");
-		// map.put("errorMsg", bindingResult.getFieldError()
-		// .getDefaultMessage());
-		// }
 		System.out.println(orders);
 		map.put("accepted data is ", orders);
 		return map;
@@ -85,7 +103,8 @@ public class EmployeeRESTController {
 	}
 
 	@RequestMapping(value = "/registerdown.html", method = RequestMethod.POST)
-	public ModelAndView registerCallback(@ModelAttribute("user") UserForm user,
+	public ModelAndView registerCallback(
+			@Valid @ModelAttribute("user") UserForm user,
 			BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
@@ -102,12 +121,30 @@ public class EmployeeRESTController {
 	}
 
 	@RequestMapping(value = "/register.html", method = RequestMethod.GET)
-	public ModelAndView register(@ModelAttribute("user") UserForm user) {
+	public ModelAndView register(@ModelAttribute("user") UserForm user)
+	// throws Exception
+	{
+		// TEST EXCEPTION THROW
+		// String exception = "IOException";
+		// if (exception.equalsIgnoreCase("NULL_POINTER")) {
+		// throw new NullPointerException("NULL_POINTER EXCEPTION");
+		// } else if (exception.equalsIgnoreCase("IOException")) {
+		// throw new IOException("IO EXCEPTION");
+		// }
 
 		ModelAndView view = new ModelAndView("register");
 
 		return view;
 	}
+
+	// /**
+	// * exception handler you can set a proper value for your error class
+	// * */
+	// @ExceptionHandler(value = NullPointerException.class)
+	// public ModelAndView handleNullPointerException(Exception e) {
+	// System.out.println("errors Occured : " + e);
+	// return new ModelAndView("nullpointer");
+	// }
 
 	@RequestMapping(value = "/employees/{id}")
 	@ResponseBody
@@ -117,6 +154,6 @@ public class EmployeeRESTController {
 					"howtodoinjava@gmail.com");
 			return new ResponseEntity<EmployeeVO>(employee, HttpStatus.OK);
 		}
-		return new ResponseEntity(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<EmployeeVO>(HttpStatus.NOT_FOUND);
 	}
 }

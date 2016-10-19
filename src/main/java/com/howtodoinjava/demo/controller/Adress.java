@@ -1,7 +1,10 @@
 package com.howtodoinjava.demo.controller;
 
+import com.howtodoinjava.validutils.IsValidCity;
+
 public class Adress {
 	private String country;
+	@IsValidCity
 	private String city;
 	private String street;
 
